@@ -1,1 +1,1 @@
-# Qt-STM32_-HMI-Project
+# Qt-STM32_HMI-Project
