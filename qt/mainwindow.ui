@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Vehicle HMI</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="layRoot">
+    <item>
+     <widget class="QFrame" name="statusStrip">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <layout class="QHBoxLayout" name="layStatusStrip">
+       <item>
+        <widget class="QLabel" name="lblMode">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>모드: 수동</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="lineStatus">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblAuth">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>인증: 미인증</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="spStatusStrip">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblStripTemp">
+         <property name="text">
+          <string>--.- °C / -- %</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="layBody">
+      <item>
+       <widget class="QListWidget" name="navList">
+        <property name="maximumSize">
+         <size>
+          <width>170</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="currentRow">
+         <number>0</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>계기판</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>후방 카메라</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>운전자 인식</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>주행 조작</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>환경 설정</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DB 조회</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QStackedWidget" name="stackMain">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="pageDashboard">
+         <layout class="QVBoxLayout" name="layDashboard">
+          <item>
+           <widget class="QGroupBox" name="grpCabin">
+            <property name="title">
+             <string>차실 환경</string>
+            </property>
+            <layout class="QVBoxLayout" name="layCabin">
+             <item>
+              <widget class="QLabel" name="lblCabinTemp">
+               <property name="font">
+                <font>
+                 <pointsize>40</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>--.- °C</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblHumidity">
+               <property name="text">
+                <string>습도 -- %</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="grpSpeed">
+            <property name="title">
+             <string>주행 속도</string>
+            </property>
+            <layout class="QVBoxLayout" name="laySpeed">
+             <item>
+              <widget class="QLabel" name="lblSpeed">
+               <property name="font">
+                <font>
+                 <pointsize>16</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>0 cm/s</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QProgressBar" name="pbSpeed">
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+               <property name="textVisible">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="grpUltrasonic">
+            <property name="title">
+             <string>초음파 거리</string>
+            </property>
+            <layout class="QGridLayout" name="layUltrasonic">
+             <item row="0" column="1">
+              <widget class="QProgressBar" name="pbUltraFront">
+               <property name="maximum">
+                <number>200</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+               <property name="textVisible">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblUltraFrontName">
+               <property name="text">
+                <string>후방</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="lblUltraFront">
+               <property name="text">
+                <string>--- cm</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spDashboard">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pageCamRear">
+         <layout class="QVBoxLayout" name="layPageCamRear">
+          <item>
+           <widget class="QGroupBox" name="grpCamRear">
+            <property name="title">
+             <string>후방 카메라</string>
+            </property>
+            <layout class="QVBoxLayout" name="layCamRear">
+             <item>
+              <widget class="QLabel" name="lblCamRear">
+               <property name="minimumSize">
+                <size>
+                 <width>320</width>
+                 <height>240</height>
+                </size>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Shape::Box</enum>
+               </property>
+               <property name="text">
+                <string>NO SIGNAL</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="layCamRearBtns">
+               <item>
+                <widget class="QLabel" name="lblRearWarning">
+                 <property name="text">
+                  <string>후방 거리: --- cm</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="spCamRear">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnCamRearToggle">
+                 <property name="text">
+                  <string>후방 카메라 켜기</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pageDriver">
+         <layout class="QVBoxLayout" name="layPageDriver">
+          <item>
+           <widget class="QGroupBox" name="grpCamInternal">
+            <property name="title">
+             <string>내장 카메라 (인식 시)</string>
+            </property>
+            <layout class="QVBoxLayout" name="layCamInternal">
+             <item>
+              <widget class="QLabel" name="lblCamInternal">
+               <property name="minimumSize">
+                <size>
+                 <width>320</width>
+                 <height>240</height>
+                </size>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Shape::Box</enum>
+               </property>
+               <property name="text">
+                <string>대기 중</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblRecogResult">
+               <property name="text">
+                <string>인식 결과: -</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="grpDriverManage">
+            <property name="title">
+             <string>운전자 등록 / 조회</string>
+            </property>
+            <layout class="QVBoxLayout" name="layDriverManage">
+             <item>
+              <widget class="QPushButton" name="btnRecogToggle">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>인식 시작</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="layDriverInput">
+               <item>
+                <widget class="QLineEdit" name="editDriverName">
+                 <property name="placeholderText">
+                  <string>운전자 이름</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnRegisterFace">
+                 <property name="text">
+                  <string>얼굴 등록</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnDriverList">
+                 <property name="text">
+                  <string>운전자 조회</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spDriver">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pageControl">
+         <layout class="QVBoxLayout" name="layPageControl">
+          <item>
+           <layout class="QHBoxLayout" name="layControlTop">
+            <item>
+             <widget class="QPushButton" name="btnModeToggle">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>48</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>모드 전환</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnHazard">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>48</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>비상등</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="grpDirection">
+            <property name="title">
+             <string>방향 조작</string>
+            </property>
+            <layout class="QGridLayout" name="layDirection">
+             <item row="0" column="1">
+              <widget class="QPushButton" name="btnUp">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>▲</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="btnLeft">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>◀</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="btnStop">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>STOP</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="btnRight">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>▶</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="btnDown">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>▼</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spControl">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pageEnv">
+         <layout class="QVBoxLayout" name="layPageEnv">
+          <item>
+           <widget class="QGroupBox" name="grpFan">
+            <property name="title">
+             <string>선풍기</string>
+            </property>
+            <layout class="QHBoxLayout" name="layFan">
+             <item>
+              <widget class="QPushButton" name="btnFanOn">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>ON</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">groupFan</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnFanOff">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>OFF</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">groupFan</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnFanAuto">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>AUTO</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">groupFan</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="grpThreshold">
+            <property name="title">
+             <string>임계 온도</string>
+            </property>
+            <layout class="QHBoxLayout" name="layThreshold">
+             <item>
+              <widget class="QDoubleSpinBox" name="spinThreshold">
+               <property name="minimumSize">
+                <size>
+                 <width>110</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="suffix">
+                <string> °C</string>
+               </property>
+               <property name="decimals">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <double>50.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.500000000000000</double>
+               </property>
+               <property name="value">
+                <double>27.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnApplyThreshold">
+               <property name="text">
+                <string>적용</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spThreshold">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="spEnv">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="databaseTab">
+         <layout class="QVBoxLayout" name="databaseLayout">
+          <item>
+           <widget class="QGroupBox" name="searchGroup">
+            <property name="title">
+             <string>조회 조건</string>
+            </property>
+            <layout class="QGridLayout" name="searchLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="startLabel">
+               <property name="text">
+                <string>시작 시간</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QDateTimeEdit" name="startDateTimeEdit">
+               <property name="displayFormat">
+                <string>yyyy-MM-dd HH:mm:ss</string>
+               </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="endLabel">
+               <property name="text">
+                <string>종료 시간</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QDateTimeEdit" name="endDateTimeEdit">
+               <property name="displayFormat">
+                <string>yyyy-MM-dd HH:mm:ss</string>
+               </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="logTypeLabel">
+               <property name="text">
+                <string>데이터 종류</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1" colspan="2">
+              <widget class="QComboBox" name="logTypeComboBox">
+               <item>
+                <property name="text">
+                 <string>시스템 이벤트</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>차량 로그</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>환경 로그</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>인증 이력</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="searchButton">
+               <property name="text">
+                <string>조회</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableView" name="resultTableView">
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="resultCountLabel">
+            <property name="text">
+             <string>조회 결과: 0건</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>navList</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>stackMain</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <buttongroups>
+  <buttongroup name="groupFan"/>
+ </buttongroups>
+</ui>
